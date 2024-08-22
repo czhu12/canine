@@ -8,7 +8,7 @@
     "@hotwired/turbo-rails": "^8.0.3",
     "@rails/actioncable": "^7.1.0",
     "@rails/actiontext": "^7.1.0",
-    "@rails/activestorage": "^7.1.0",
+    "@rails/activestorage": "^7.2.0",
     "@rails/request.js": "^0.0.9",
     "@tailwindcss/aspect-ratio": "^0.4.0",
     "@tailwindcss/forms": "^0.5.0",
