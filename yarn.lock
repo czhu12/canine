@@ -1093,10 +1093,10 @@ tailwindcss-stimulus-components@^5.1.0:
   resolved "https://registry.npmjs.org/tailwindcss-stimulus-components/-/tailwindcss-stimulus-components-5.1.1.tgz"
   integrity sha512-9e3H9WLZoGzWQBVOdYvxqM42MsJ4dfkfdrs3NGV+HYvHbIcF9tukl2MPKVZpBv/pP+puZbJv0lFgdn79IGVApA==
 
-tailwindcss@^3.4.1:
-  version "3.4.3"
-  resolved "https://registry.npmjs.org/tailwindcss/-/tailwindcss-3.4.3.tgz"
-  integrity sha512-U7sxQk/n397Bmx4JHbJx/iSOOv5G+II3f1kpLpY2QeUv5DcPdcTsYLlusZfq1NthHS1c1cZoyFmmkex1rzke0A==
+tailwindcss@^3.4.10:
+  version "3.4.10"
+  resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-3.4.10.tgz#70442d9aeb78758d1f911af29af8255ecdb8ffef"
+  integrity sha512-KWZkVPm7yJRhdu4SRSl9d4AK2wM3a50UsvgHZO7xY77NQr2V+fIrEuoDGQcbvswWvFGbS2f6e+jC/6WJm1Dl0w==
   dependencies:
     "@alloc/quick-lru" "^5.2.0"
     arg "^5.0.2"
