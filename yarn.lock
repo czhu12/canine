@@ -141,18 +141,18 @@
   resolved "https://registry.npmjs.org/@hotwired/strada/-/strada-1.0.0-beta1.tgz"
   integrity sha512-3J9Rc/qnWvnTnl9zD4l2ZHQQ3QbZANiKCh+AiYW2Lak+7JHx/U0AU+eoA4QDVlVylNFmKbxo3HTLCjEx9txqjA==
 
-"@hotwired/turbo-rails@^8.0.3":
-  version "8.0.4"
-  resolved "https://registry.npmjs.org/@hotwired/turbo-rails/-/turbo-rails-8.0.4.tgz"
-  integrity sha512-GHCv5+B2VzYZZvMFpg/g9JLx/8pl/8chcubSB7T+Xn1zYOMqAKB6cT80vvWUzxdwfm/2KfaRysfDz+BmvtjFaw==
+"@hotwired/turbo-rails@^8.0.9":
+  version "8.0.9"
+  resolved "https://registry.yarnpkg.com/@hotwired/turbo-rails/-/turbo-rails-8.0.9.tgz#e18f4035dab26c6c12f17245225e9f3a89fd6216"
+  integrity sha512-yJWcKjztrerWYIiinv/febJlVzsOfih2s4eGAoHmg0XvWkGhzWqupknByt18Jo5NfbZgCdeWlUH3q818Ay7FOQ==
   dependencies:
-    "@hotwired/turbo" "^8.0.4"
+    "@hotwired/turbo" "^8.0.6"
     "@rails/actioncable" "^7.0"
 
-"@hotwired/turbo@^8.0.4":
-  version "8.0.4"
-  resolved "https://registry.npmjs.org/@hotwired/turbo/-/turbo-8.0.4.tgz"
-  integrity sha512-mlZEFUZrJnpfj+g/XeCWWuokvQyN68WvM78JM+0jfSFc98wegm259vCbC1zSllcspRwbgXK31ibehCy5PA78/Q==
+"@hotwired/turbo@^8.0.6":
+  version "8.0.6"
+  resolved "https://registry.yarnpkg.com/@hotwired/turbo/-/turbo-8.0.6.tgz#d7c546f7700f18ebfe4d1b106e03c9ed1bb22887"
+  integrity sha512-mwZRfwcJ4yatUnW5tcCY9NDvo0kjuuLQF/y8pXigHhS+c/JY/ccNluVyuERR9Sraqx0qdpenkO3pNeSWz1mE3w==
 
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"
