@@ -7,7 +7,7 @@
     "@hotwired/strada": "^1.0.0-beta1",
     "@hotwired/turbo-rails": "^8.0.3",
     "@rails/actioncable": "^7.1.0",
-    "@rails/actiontext": "^7.1.0",
+    "@rails/actiontext": "^7.2.100",
     "@rails/activestorage": "^7.2.100",
     "@rails/request.js": "^0.0.9",
     "@tailwindcss/aspect-ratio": "^0.4.0",
