@@ -27,10 +27,19 @@ class Projects::ServicesController < Projects::BaseController
     end
   end
 
+  def destroy
+    if @service.destroy
+      redirect_to project_services_path(@project), notice: 'Service was successfully destroyed.'
+    else
+      redirect_to project_services_path(@project), alert: 'Service could not be destroyed.'
+    end
+  end
+
   private
   def set_service
     @service = @project.services.find(params[:id])
   end
+
   def service_params
     params.require(:service).permit(:service_type, :command)
   end

@@ -3,13 +3,18 @@
     Services
   </div>
 
+  <div>
+    <%= turbo_frame_tag "new_service" do %>
+      <%= link_to "New Service", new_project_service_path(@project), class: "btn btn-primary" %>
+    <% end %>
+  </div>
   <div class="overflow-x-auto">
     <table class="w-full table-auto">
       <thead class="">
         <tr>
-          <th class="px-4 py-2 text-left text-gray-600">Name</th>
-          <th class="px-4 py-2 text-left text-gray-600">Service Type</th>
-          <th class="px-4 py-2 text-left text-gray-600">Command</th>
+          <th class="px-4 py-2 text-left">Name</th>
+          <th class="px-4 py-2 text-left">Service Type</th>
+          <th class="px-4 py-2 text-left">Command</th>
         </tr>
       </thead>
       <tbody>

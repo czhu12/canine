@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_07_164422) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_20_231224) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -150,7 +150,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_07_164422) do
     t.string "repository_url"
     t.string "git_sha"
     t.string "commit_message"
-    t.integer "status"
+    t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "commit_sha", null: false
@@ -183,11 +183,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_07_164422) do
   end
 
   create_table "cron_schedules", force: :cascade do |t|
+    t.bigint "service_id", null: false
     t.string "schedule", null: false
-    t.bigint "project_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["project_id"], name: "index_cron_schedules_on_project_id"
+    t.index ["service_id"], name: "index_cron_schedules_on_service_id"
   end
 
   create_table "deployments", force: :cascade do |t|
@@ -198,21 +198,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_07_164422) do
     t.index ["build_id"], name: "index_deployments_on_build_id"
   end
 
-  create_table "deploys", force: :cascade do |t|
-    t.bigint "project_id", null: false
-    t.bigint "build_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["build_id"], name: "index_deploys_on_build_id"
-    t.index ["project_id"], name: "index_deploys_on_project_id"
-  end
-
   create_table "domains", force: :cascade do |t|
-    t.bigint "project_id", null: false
+    t.bigint "service_id", null: false
     t.string "domain_name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["project_id"], name: "index_domains_on_project_id"
+    t.index ["service_id"], name: "index_domains_on_service_id"
   end
 
   create_table "environment_variables", force: :cascade do |t|
@@ -431,6 +422,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_07_164422) do
     t.index ["name"], name: "index_projects_on_name", unique: true
   end
 
+  create_table "services", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.integer "service_type", null: false
+    t.string "command", null: false
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_services_on_project_id"
+  end
+
   create_table "solid_queue_blocked_executions", force: :cascade do |t|
     t.bigint "job_id", null: false
     t.string "queue_name", null: false
@@ -586,11 +587,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_07_164422) do
   add_foreign_key "api_tokens", "users"
   add_foreign_key "builds", "projects"
   add_foreign_key "clusters", "users"
-  add_foreign_key "cron_schedules", "projects"
+  add_foreign_key "cron_schedules", "services"
   add_foreign_key "deployments", "builds"
-  add_foreign_key "deploys", "builds"
-  add_foreign_key "deploys", "projects"
-  add_foreign_key "domains", "projects"
+  add_foreign_key "domains", "services"
   add_foreign_key "environment_variables", "projects"
   add_foreign_key "pay_charges", "pay_customers", column: "customer_id"
   add_foreign_key "pay_payment_methods", "pay_customers", column: "customer_id"
@@ -598,6 +597,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_07_164422) do
   add_foreign_key "project_add_ons", "add_ons"
   add_foreign_key "project_add_ons", "projects"
   add_foreign_key "projects", "clusters"
+  add_foreign_key "services", "projects"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

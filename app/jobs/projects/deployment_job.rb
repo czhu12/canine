@@ -2,6 +2,7 @@ require 'base64'
 require 'json'
 
 class Projects::DeploymentJob < ApplicationJob
+
   def perform(deployment)
     cluster_kubeconfig = deployment.project.cluster.kubeconfig
     project = deployment.project
@@ -10,24 +11,17 @@ class Projects::DeploymentJob < ApplicationJob
     runner = Cli::RunAndLog.new(deployment)
     kubectl = K8::Kubectl.new(cluster_kubeconfig, runner)
     upload_registry_secrets(kubectl, deployment)
-    
-    if project.cron_job?
-      cron_job_yaml = K8::Stateless::CronJob.new(project).to_yaml
-      kubectl.apply_yaml(cron_job_yaml)
-    else
-      deployment_yaml = K8::Stateless::Deployment.new(project).to_yaml
-      kubectl.apply_yaml(deployment_yaml)
-      kubectl.("rollout restart deployment/#{project.name}-deployment")
 
-      if project.web_service? || project.internal_service?
-        service_yaml = K8::Stateless::Service.new(project).to_yaml
-        kubectl.apply_yaml(service_yaml)
-      end
-
-      if project.web_service?
-        # TODO: Set up ingress
-        ingress_yaml = K8::Stateless::Ingress.new(project).to_yaml
-        kubectl.apply_yaml(ingress_yaml)
+    # For each of the projects services
+    project.services.each do |service|
+      if service.background_service?
+        apply_deployment(service, kubectl)
+      elsif service.cron_job?
+        apply_cron_job(service, kubectl)
+      elsif service.web_service?
+        apply_deployment(service, kubectl)
+        apply_service(service, kubectl)
+        apply_ingress(service, kubectl)
       end
     end
 
@@ -35,6 +29,26 @@ class Projects::DeploymentJob < ApplicationJob
   rescue StandardError => e
     deployment.info "Deployment failed: #{e.message}"
     deployment.failed!
+  end
+
+  def apply_deployment(service, kubectl)
+    deployment_yaml = K8::Stateless::Deployment.new(service).to_yaml
+    kubectl.apply_yaml(deployment_yaml)
+  end
+
+  def apply_cron_job(service, kubectl)
+    cron_job_yaml = K8::Stateless::CronJob.new(service).to_yaml
+    kubectl.apply_yaml(cron_job_yaml)
+  end
+
+  def apply_service(service, kubectl)
+    service_yaml = K8::Stateless::Service.new(service).to_yaml
+    kubectl.apply_yaml(service_yaml)
+  end
+
+  def apply_ingress(service, kubectl)
+    ingress_yaml = K8::Stateless::Ingress.new(service).to_yaml
+    kubectl.apply_yaml(ingress_yaml)
   end
 
   def upload_registry_secrets(kubectl, deployment)

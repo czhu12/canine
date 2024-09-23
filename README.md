@@ -1,5 +1,6 @@
 TODO:
 * Building a cron job scheduler
+* Aggregate ENV variables for add on urls
 
 # 🎉 Jumpstart Pro Rails
 

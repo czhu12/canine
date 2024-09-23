@@ -25,5 +25,10 @@ spec:
         <% end %>
         ports:
         - containerPort: <%= port %>
+        <% if service.command %>
+        command: <% service.command.split(' ').each do |c| %>
+          - <%= c %>
+        <% end %>
+        <% end %>
       imagePullSecrets:
       - name: dockerconfigjson-github-com

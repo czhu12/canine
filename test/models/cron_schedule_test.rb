@@ -6,15 +6,15 @@
 #  schedule   :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  project_id :bigint           not null
+#  service_id :bigint           not null
 #
 # Indexes
 #
-#  index_cron_schedules_on_project_id  (project_id)
+#  index_cron_schedules_on_service_id  (service_id)
 #
 # Foreign Keys
 #
-#  fk_rails_...  (project_id => projects.id)
+#  fk_rails_...  (service_id => services.id)
 #
 require "test_helper"
 

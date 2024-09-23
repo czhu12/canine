@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     end
   end
   resources :projects do
-    resources :services, module: :projects
+    resources :services, only: [:index, :new, :create, :destroy], module: :projects
     resources :metrics, only: [:index], module: :projects
     resources :project_add_ons, only: [:create, :destroy], module: :projects
     resources :environment_variables, only: [:index, :create], module: :projects

@@ -12,38 +12,6 @@
   </div>
 
   <div data-controller="partial-select">
-    <div class="form-group">
-      <%= form.label :project_type %>
-      <%= form.select(
-        :project_type,
-        Project.project_types.keys.map { |type| [type.titleize, type] },
-        {},
-        class: "select select-bordered",
-        data: {
-          "partial-select-target": "select",
-          "select-attribute-value": "data-project-type",
-          "action": "change->partial-select#toggle",
-        }
-      ) %>
-    </div>
-    <div class="text-sm mb-4">
-      <p>
-        <b>Web service</b>: Useful for publicly accessible services like web applications.
-      </p>
-      <p>
-        <b>Internal service</b>: Useful for services that should only be connected to within the cluster like microservices.
-      </p>
-      <p>
-        <b>Process</b>: Useful for services that should don't need to be connected to like background workers that are continuously running.
-      </p>
-      <p>
-        <b>Cron job</b>: Useful for running tasks at a specific time like backups.
-      </p>
-      <div class="mt-4 text-warning italic">
-        Do not create any databases here, create an <%= link_to "add on", add_ons_path %> and then connect it to your project.
-      </div>
-    </div>
-
     <div class="mb-4 hidden" data-partial-select-target="toggleable" data-project-type="cron_job">
       <%= form.label :cron_schedule %>
       <%= form.text_field :cron_schedule, class: "input input-bordered w-full" %>
@@ -52,7 +20,10 @@
 
   <div class="form-group">
     <%= form.label :repository_url %>
-    <%= form.text_field :repository_url, class: "input input-bordered w-full" %>
+    <div class="flex gap-2">
+      <%= form.text_field :repository_url, class: "input input-bordered w-full" %>
+      <%= render "projects/github/connect" %>
+    </div>
   </div>
 
   <div class="form-group">
@@ -64,7 +35,6 @@
     <%= form.label :container_registry %>
     <%= form.text_field :container_registry, class: "input input-bordered w-full" %>
   </div>
-
 
   <div class="form-group">
     <%= form.label :autodeploy %>

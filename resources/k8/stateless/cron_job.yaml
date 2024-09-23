@@ -1,18 +1,18 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: <%= project.name %>
+  name: <%= service.name %>
 spec:
-  schedule: <%= project.cron_schedule.schedule %>
+  schedule: <%= service.cron_schedule.schedule %>
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-          - name: <%= project.name %>
-            image: <%= project.container_registry_url %>
+          - name: <%= service.project.name %>
+            image: <%= service.project.container_registry_url %>
             imagePullPolicy: Always
-            command: <% project.command.split(' ').each do |c| %>
+            command: <% service.command.split(' ').each do |c| %>
               - <%= c %>
             <% end %>
           restartPolicy: OnFailure

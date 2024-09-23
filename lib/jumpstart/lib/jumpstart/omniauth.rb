@@ -3,38 +3,38 @@
 
 module Jumpstart
   module Omniauth
-    autoload :Callbacks, "jumpstart/omniauth/callbacks"
+    autoload :Callbacks, 'jumpstart/omniauth/callbacks'
 
     AVAILABLE_PROVIDERS = {
-      "facebook" => {
-        name: "Facebook",
-        scope: "email",
+      'facebook' => {
+        name: 'Facebook',
+        scope: 'email',
         provider: :facebook,
         icon: :facebook
       },
-      "github" => {
-        name: "GitHub",
-        scope: "user:email",
+      'github' => {
+        name: 'GitHub',
+        scope: 'user:email',
         provider: :github,
         icon: :github
       },
-      "google-oauth2" => {
-        name: "Google",
+      'google-oauth2' => {
+        name: 'Google',
         provider: :google_oauth2,
         icon: :google
       },
-      "microsoft_graph" => {
-        name: "Microsoft",
+      'microsoft_graph' => {
+        name: 'Microsoft',
         provider: :microsoft_graph,
         icon: :microsoft
       },
-      "twitter" => {
-        name: "Twitter",
+      'twitter' => {
+        name: 'Twitter',
         provider: :twitter,
         icon: :twitter
       },
-      "digitalocean" => {
-        name: "Digital Ocean",
+      'digitalocean' => {
+        name: 'Digital Ocean',
         provider: :digitalocean,
         icon: :digitalocean
       }
@@ -75,13 +75,18 @@ module Jumpstart
         credentials_for(provider).dig(:private_key).present?
     end
 
-    # Look up credentials for a provider (assumes an underscored name)
+    # Look up credentials for a provider (assumes an underscored name), ENV variables take precedence
     # omniauth:
     #   github:
     #     private_key: x
     #     public_key: y
     def self.credentials_for(provider)
-      Jumpstart.credentials.dig(Rails.env, :omniauth, provider) || Jumpstart.credentials.dig(:omniauth, provider) || {}
+      credentials = Jumpstart.credentials.dig(Rails.env, :omniauth, provider) ||
+                    Jumpstart.credentials.dig(:omniauth, provider)
+      credentials.merge({
+        private_key: ENV["OMNIAUTH_#{provider.upcase}_PRIVATE_KEY"],
+        public_key: ENV["OMNIAUTH_#{provider.upcase}_PUBLIC_KEY"]
+      }.compact)
     end
 
     # Returns a hash of all the other keys and values in the omniauth hash for this provider

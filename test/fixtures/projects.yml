@@ -12,7 +12,7 @@
 #  predeploy_command              :string
 #  project_type                   :integer          not null
 #  repository_url                 :string           not null
-#  status                         :integer          default("created"), not null
+#  status                         :integer          default("creating"), not null
 #  created_at                     :datetime         not null
 #  updated_at                     :datetime         not null
 #  cluster_id                     :bigint           not null

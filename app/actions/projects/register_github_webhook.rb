@@ -12,7 +12,8 @@ class Projects::RegisterGithubWebhook
       {
         url: Rails.application.routes.url_helpers.inbound_webhooks_github_index_url,
         content_type: 'json',
-        secret: Jumpstart.credentials[:omniauth][:github][:webhook_secret]
+        secret: ENV.fetch('OMNIAUTH_GITHUB_WEBHOOK_SECRET',
+                          Jumpstart::Omniauth.credentials_for(:github)[:webhook_secret])
       },
       {
         events: ['push'],

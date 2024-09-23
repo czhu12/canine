@@ -1,6 +1,79 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "5325bae20c6ee6106cd591b6254975a5f0b894176512486a062a31214f0ed9f6",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "app/jobs/projects/build_job.rb",
+      "line": 106,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "Open3.capture3(\"docker\", \"push\", \"ghcr.io/#{build.project.repository_url}:latest\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Projects::BuildJob",
+        "method": "perform"
+      },
+      "user_input": "build.project.repository_url",
+      "confidence": "Medium",
+      "cwe_id": [
+        77
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "747915da64b4bafc1ae5198789bf0cf8fde1990e3c44bad9e88217a8dfa661be",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "app/services/k8/helm/client.rb",
+      "line": 12,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "`helm ls --all-namespaces --kubeconfig=#{kubeconfig_file.path}`",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "K8::Helm::Client",
+        "method": "ls"
+      },
+      "user_input": "kubeconfig_file.path",
+      "confidence": "Medium",
+      "cwe_id": [
+        77
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "8b61798af26ed16c421c356c1ff4278a3ec0693722c9e5d1eac4786c2e977967",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "app/jobs/projects/build_job.rb",
+      "line": 36,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "Open3.capture3(\"git\", \"clone\", \"--depth\", \"1\", \"--branch\", build.project.branch, \"https://#{build.project.user.github_username}:#{build.project.user.github_access_token}@github.com/#{build.project.repository_url}.git\", repository_path)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Projects::BuildJob",
+        "method": "perform"
+      },
+      "user_input": "build.project.user.github_username",
+      "confidence": "Medium",
+      "cwe_id": [
+        77
+      ],
+      "note": ""
+    },
+    {
+      "fingerprint": "8f1d8cb99e480932a02c6e6cb119e0b3f1b124cce1894791eab776cfcca48266",
+      "note": "ignore kubectl command injections"
+    },
+    {
       "warning_type": "Mass Assignment",
       "warning_code": 105,
       "fingerprint": "8f1d8cb99e480932a02c6e6cb119e0b3f1b124cce1894791eab776cfcca48266",
@@ -18,9 +91,135 @@
       },
       "user_input": ":admin",
       "confidence": "High",
-      "note": "Brakeman doesn't like :admin in params"
+      "note": "ignore kubectl command injections"
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "95161bff68664da91c3a426965d597ec415388db1798017184dfbd161cf57d76",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "app/services/k8/metrics/nodes.rb",
+      "line": 5,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "`#{\"kubectl top nodes --kubeconfig #{kubeconfig_file.path}\"}`",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "K8::Metrics::Nodes",
+        "method": "s(:self).call"
+      },
+      "user_input": "kubeconfig_file.path",
+      "confidence": "Medium",
+      "cwe_id": [
+        77
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "98b15a0f09039cead17ab2c03de7d924f289655908f4fbda57b09b7c45998325",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/projects/show.html.erb",
+      "line": 5,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => Projects::Create.call(Project.new(project_params), params).project, {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "ProjectsController",
+          "method": "create",
+          "line": 37,
+          "file": "app/controllers/projects_controller.rb",
+          "rendered": {
+            "name": "projects/show",
+            "file": "app/views/projects/show.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "projects/show"
+      },
+      "user_input": "params",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "9a05997c24a1797ca5cde2de376adbf1ca7c3fb718984034869427fc770bd710",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "app/services/cli.rb",
+      "line": 19,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "Open3.popen3((envs.map do\n \"#{k}=#{v}\"\n end.join(\" \") + \" #{command}\"))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Cli::RunAndLog",
+        "method": "call"
+      },
+      "user_input": "k",
+      "confidence": "Medium",
+      "cwe_id": [
+        77
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "a5231955c1d2de49d9a2e2d496bedb69f1a90f575a711256368c55e56b199fa4",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "app/services/cli.rb",
+      "line": 6,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "`#{(envs.map do\n \"#{k}=#{v}\"\n end.join(\" \") + \" #{command}\")}`",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Cli::RunAndReturnOutput",
+        "method": "call"
+      },
+      "user_input": "(envs.map do\n \"#{k}=#{v}\"\n end.join(\" \") + \" #{command}\")",
+      "confidence": "Medium",
+      "cwe_id": [
+        77
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "fd764dd7253615d92893ff358acc89115f3b6be266fc73c03b0863b385873afd",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "app/services/k8/metrics/pods.rb",
+      "line": 5,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "`#{\"kubectl top pods --kubeconfig #{kubeconfig_file.path} #{selector.present? ? (\"-l #{selector}\") : (\"\")}\"}`",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "K8::Metrics::Pods",
+        "method": "s(:self).call"
+      },
+      "user_input": "kubeconfig_file.path",
+      "confidence": "Medium",
+      "cwe_id": [
+        77
+      ],
+      "note": ""
     }
   ],
-  "updated": "2021-05-03 16:43:46 -0500",
-  "brakeman_version": "5.0.1"
+  "updated": "2024-09-23 11:20:06 -0700",
+  "brakeman_version": "6.1.2"
 }

@@ -1,4 +1,23 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# == Schema Information
+#
+# Table name: services
+#
+#  id           :bigint           not null, primary key
+#  command      :string           not null
+#  name         :string           not null
+#  service_type :integer          not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  project_id   :bigint           not null
+#
+# Indexes
+#
+#  index_services_on_project_id  (project_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (project_id => projects.id)
+#
 
 one:
   project: one

@@ -6,15 +6,15 @@
 #  domain_name :string           not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
-#  project_id  :bigint           not null
+#  service_id  :bigint           not null
 #
 # Indexes
 #
-#  index_domains_on_project_id  (project_id)
+#  index_domains_on_service_id  (service_id)
 #
 # Foreign Keys
 #
-#  fk_rails_...  (project_id => projects.id)
+#  fk_rails_...  (service_id => services.id)
 #
 class Domain < ApplicationRecord
   belongs_to :project
