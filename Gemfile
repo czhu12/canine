@@ -45,6 +45,13 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # For running autotester
+  gem "unparser", "~> 0.6.15"
+
+  gem "langchainrb", "~> 0.19.2"
+
+  gem "ruby-openai", "~> 7.3"
 end
 
 group :development do
