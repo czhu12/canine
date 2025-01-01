@@ -20,8 +20,8 @@ class AddOns::InstallHelmChart
     unless charts.any? { |chart| chart['name'] == add_on.name }
       helm_chart_url = add_on.helm_chart_url
       if chart['add_repo_command']
-        client.add_repo(chart['add_repo_command'])
-        client.repo_update!
+        K8::Helm::Client.add_repo(chart['add_repo_command'])
+        K8::Helm::Client.repo_update!
       end
       if add_on.helm_chart?
         # Special case for helm_chart, we need to add the repo and update it

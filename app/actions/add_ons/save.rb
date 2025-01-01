@@ -6,18 +6,19 @@ class AddOns::Save
   executed do |context|
     add_on = context.add_on
     apply_template_to_values(add_on)
-    fetch_package_details(add_on)
+    save_package_details(add_on)
     add_on.save
+  rescue => e
+    add_on.errors.add(:base, e.message)
+    context.fail_and_return!
   end
 
-  def self.fetch_package_details(add_on)
+  def self.save_package_details(add_on)
     if add_on.helm_chart?
-      result = AddOns::HelmChartDetails.execute(query: add_on.metadata['helm_chart.name'])
-      if result.failure?
-        add_on.errors.add(:base, "Failed to fetch package details")
-        return
-      end
-      package = result.response['packages'].find { |package| package['package_id'] == add_on.metadata['package_id'] }
+      package = K8::Helm::Client.fetch_package_details(
+        name: add_on.metadata['helm_chart.name'],
+        package_id: add_on.metadata['package_id']
+      )
       add_on.metadata['package_details'] = package
     end
   end

@@ -78,6 +78,15 @@ class AddOnsController < ApplicationController
     redirect_to add_on_url(@add_on), notice: "Add on #{@add_on.name} restarted"
   end
 
+  def default_values
+    # Render a partial with the default values
+    @default_values = K8::Helm::Client.new(
+      @add_on.cluster.kubeconfig,
+      Cli::RunAndReturnOutput.new,
+    ).default_values_yaml(params[:package_id], params[:package_name])
+    render partial: "add_ons/helm/default_values", locals: { default_values: @default_values }
+  end
+
   # DELETE /add_ons/1 or /add_ons/1.json
   def destroy
     @add_on.uninstalling!
