@@ -1,7 +1,9 @@
-<div class="bg-gray-900 text-gray-100 rounded-lg shadow-lg" data-controller="logs" id="<%= dom_id(loggable, :logs) %>">
-  <div class="overflow-auto h-96 bg-gray-800 p-2 rounded" data-logs-target="container">
-    <pre class="text-sm font-mono whitespace-pre-wrap"><%= ansi_to_tailwind(loggable.log_output&.output || "Your logs will appear here...").html_safe %></pre>
-  </div>
-</div>
-
-<%= turbo_stream_from dom_id(loggable, :logs) %>
+  <%= render(
+    "shared/partials/async_renderer",
+    view_model: Async::Logs::LogViewModel.new(
+      current_user,
+      loggable_type: loggable.class.name,
+      loggable_id: loggable.id,
+    ),
+    refresh_interval: 5000
+  ) %>

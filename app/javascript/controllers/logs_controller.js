@@ -2,14 +2,35 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["container"]
+  static values = {
+    loggableId: String
+  }
+
+  scrollPositionId() {
+    return `canine-scrollposition-${this.loggableIdValue}`;
+  }
 
   connect() {
-    console.log("connected")
-    // Scroll to the bottom of the container
-    this.scrollToBottom();
+    const scrollPosition = localStorage.getItem(this.scrollPositionId());
+    if (scrollPosition) {
+      this.containerTarget.scrollTo(0, scrollPosition);
+    } else {
+      // Scroll to bottom
+      this.scrollToBottom();
+    }
+  }
 
-    // Add event listener for Turbo Frame load
-    document.addEventListener('turbo:frame-load', this.scrollToBottom.bind(this));
+  disconnect() {
+    localStorage.removeItem(this.scrollPositionId());
+  }
+
+  updateScroll(event) {
+    // If scroll is at the bottom, don't save the scroll position
+    if (event.target.scrollTop === event.target.scrollHeight) {
+      localStorage.removeItem(this.scrollPositionId());
+    } else {
+      localStorage.setItem(this.scrollPositionId(), event.target.scrollTop);
+    }
   }
 
   scrollToBottom() {

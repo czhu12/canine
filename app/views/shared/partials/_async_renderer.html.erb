@@ -2,6 +2,7 @@
   data-controller="async-renderer"
   data-async-renderer-view-model-value="<%= view_model.name %>"
   data-async-renderer-params-value="<%= view_model.params.to_json %>"
+  data-async-renderer-refresh-interval-value="<%= defined?(refresh_interval) ? refresh_interval : nil %>"
 >
   <div data-async-renderer-target="frame">
     <%= view_model.initial_render.html_safe %>

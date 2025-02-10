@@ -4,11 +4,16 @@ export default class extends Controller {
   static targets = ["frame"]
   static values = {
     viewModel: String,
-    params: String
+    params: String,
+    refreshInterval: Number
   }
 
   connect() {
     this.render();
+  }
+
+  disconnect() {
+    clearInterval(this.refreshInterval);
   }
 
   async render() {
@@ -21,6 +26,12 @@ export default class extends Controller {
       this.frameTarget.innerHTML = html;
     } else {
       this.frameTarget.innerHTML = `<div class="text-error flex items-center gap-2"><iconify-icon icon="lucide:triangle-alert" width="24" height="24"></iconify-icon> Failed to load</div>`;
+    }
+    // Reset the timer here
+    if (this.refreshIntervalValue) {
+      this.refreshInterval = setTimeout(() => {
+        this.render();
+      }, this.refreshIntervalValue);
     }
   }
 }

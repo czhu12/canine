@@ -10,6 +10,8 @@ module Loggable
     output = "\e[#{color}m#{line}\e[0m"
     Rails.logger.info(line)
     ensure_log_output
+
+    # This has to be buffered somehow, otherwise the log output will be saved too often
     log_output.update(output: log_output.output.to_s + output + "\n")
   end
 
