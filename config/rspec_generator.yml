@@ -1,0 +1,13 @@
+project_description: "Canine is a platform that makes Kubernetes as easy to use as Heroku. It uses the Kubernetes API to create and manage resources."
+starting_points:
+  - app/models/**/*.rb
+  - app/controllers/projects/**/*.rb
+  - app/controllers/projects_controller.rb
+  - app/controllers/add_ons/**/*.rb
+  - app/controllers/add_ons_controller.rb
+  - app/controllers/clusters/**/*.rb
+  - app/controllers/clusters_controller.rb
+  - app/actions/**/*.rb
+  - app/jobs/projects/**/*.rb
+  - app/jobs/clusters/**/*.rb
+  - app/jobs/add_ons/**/*.rb
