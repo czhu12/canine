@@ -25,9 +25,17 @@ echo " [OK]"
 echo -n "Checking Docker..."
 # Check if /var/run/docker.sock exists
 if [ ! -S "/var/run/docker.sock" ]; then
-  echo " [FAIL]"
-  echo "Docker socket not found at /var/run/docker.sock. Please check your Docker installation and ensure docker is running."
-  exit 1
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    if ! docker info > /dev/null 2>&1; then
+      echo " [FAIL]"
+      echo "Docker is not running. Please start Docker Desktop."
+      exit 1
+    fi
+  else
+    echo " [FAIL]"
+    echo "Docker socket not found at /var/run/docker.sock. Please check your Docker installation and ensure docker is running."
+    exit 1
+  fi
 fi
 echo " [OK]"
 
