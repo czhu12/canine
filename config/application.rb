@@ -10,7 +10,7 @@ module Canine
   class Application < Rails::Application
     config.assets.css_compressor = nil
     config.local_mode = ENV["LOCAL_MODE"] == "true"
-    config.active_job.queue_adapter = :sidekiq
+    config.active_job.queue_adapter = :good_job
     config.application_name = Rails.application.class.module_parent_name
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.2
@@ -33,5 +33,27 @@ module Canine
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Enable cron enqueuing in this process
+    config.good_job.enable_cron = true
+
+    # Without zero-downtime deploys, re-attempt previous schedules after a deploy
+    config.good_job.cron_graceful_restart_period = 1.minute
+
+    # Configure cron with a hash that has a unique key for each recurring job
+    config.good_job.cron = {
+      fetch_metrics_job: {
+        cron: "*/15 * * * *",
+        class: "Scheduled::FetchMetricsJob"
+      },
+      flush_metrics_job: {
+        cron: "0 0 * * *",
+        class: "Scheduled::FlushMetricsJob"
+      },
+      check_health_job: {
+        cron: "0 0 * * *",
+        class: "Scheduled::CheckHealthJob"
+      }
+    }
   end
 end

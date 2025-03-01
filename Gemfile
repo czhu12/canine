@@ -71,7 +71,6 @@ gem "noticed", "~> 2.0"
 gem "omniauth-github", "~> 2.0"
 gem "pretender", "~> 0.3.4"
 gem "pundit", "~> 2.1"
-gem "sidekiq", "~> 6.2"
 gem "sitemap_generator", "~> 6.1"
 gem "whenever", require: false
 gem "responders", github: "heartcombo/responders", branch: "main"
@@ -110,3 +109,5 @@ gem "sassc-rails", "~> 2.1"
 gem "cron2english", "~> 0.1.7"
 
 gem "avo", "~> 3.17"
+
+gem "good_job", "~> 4.9"

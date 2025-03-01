@@ -3,7 +3,6 @@
 require 'shellwords'
 
 class Projects::BuildJob < ApplicationJob
-  queue_as :default
   class BuildFailure < StandardError; end
 
   def perform(build)
@@ -81,7 +80,7 @@ class Projects::BuildJob < ApplicationJob
 
   def login_to_docker(project_credential_provider, build)
     docker_login_command = %w[docker login ghcr.io --username] +
-                           [ project_credential_provider.username, "--password", project_credential_provider.access_token ]
+                            [ project_credential_provider.username, "--password", project_credential_provider.access_token ]
 
     build.info("Logging into ghcr.io as #{project_credential_provider.username}", color: :yellow)
     _stdout, stderr, status = Open3.capture3(*docker_login_command)

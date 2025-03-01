@@ -5,8 +5,7 @@
 - [ ] Automatic DNS mapping for canineapp.run
 - [ ] Add skeleton animations for async view models
 - [ ] Support login without Github
-- [ ] Support organization projects
-- [ ] Support dockerhub deployments
+- [ ] Support organization projects (outside of personal github account)
 - [ ] Migrate to goodjob for queues
 - [ ] Add skeleton loader for processes page
 - [ ] Migrate to goodjob to support scheduled jobs without a ton of separate gems
