@@ -71,12 +71,12 @@ gem "noticed", "~> 2.0"
 gem "omniauth-github", "~> 2.0"
 gem "pretender", "~> 0.3.4"
 gem "pundit", "~> 2.1"
-gem "sidekiq", "~> 6.2"
+gem "sidekiq", "~> 7.3"
 gem "sitemap_generator", "~> 6.1"
 gem "whenever", require: false
 gem "responders", github: "heartcombo/responders", branch: "main"
 gem "dotenv", "~> 3.1"
-gem "image_processing", "~> 1.13"
+gem "image_processing", "~> 1.14"
 gem "k8s-ruby", "~> 0.16.0"
 gem "kubeclient", "~> 4.12"
 gem "light-service", "~> 0.19.0"
@@ -91,7 +91,7 @@ gem "omniauth-rails_csrf_protection", "~> 1.0"
 
 gem "annotate", "~> 3.2"
 
-gem "rack", "~> 2.2"
+gem "rack", "~> 3.1"
 
 gem "tailwindcss-rails", "~> 2.7"
 
