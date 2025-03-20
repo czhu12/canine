@@ -1,6 +1,9 @@
 <%= content_for :title, t("scaffold.edit.title", model: "Cluster") %>
 
 <%= cluster_layout(@cluster) do %>
+  <div>
+    <%= render "shared/charts/chart" %>
+  </div>
   <div class="space-y-10">
     <div>
       <h2 class="text-2xl font-bold">General</h2>
