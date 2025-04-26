@@ -94,7 +94,7 @@ gem "annotate", "~> 3.2"
 
 gem "rack", "~> 2.2"
 
-gem "tailwindcss-rails", "~> 2.7"
+gem "tailwindcss-rails", "~> 4.2"
 
 gem "httparty", "~> 0.22.0"
 
