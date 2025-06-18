@@ -78,7 +78,7 @@ gem "whenever", require: false
 gem "responders", github: "heartcombo/responders", branch: "main"
 gem "dotenv", "~> 3.1"
 gem "image_processing", "~> 1.13"
-gem "k8s-ruby", "~> 0.16.0"
+gem "k8s-ruby", "~> 0.17.2"
 gem "kubeclient", "~> 4.12"
 gem "light-service", "~> 0.19.0"
 gem "octokit", "~> 9.2"
