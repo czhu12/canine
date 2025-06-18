@@ -1,13 +1,15 @@
 class Integrations::Github::RepositoriesController < ApplicationController
   def index
-    client = Octokit::Client.new(access_token: current_account.github_provider.access_token)
-    if params[:q].present?
-      client.auto_paginate = true
-      @repositories = client.repos(current_account.github_username)
+    # Preference the github provider
+    provider = current_user.providers.where(provider: [ Provider::GITHUB_PROVIDER, Provider::GITHUB_APP_PROVIDER ]).first
+
+    client = Octokit::Client.new(bearer_token: provider.access_token)
+
+    if provider.github?
+      @repositories = client.repos(provider.username)
       @repositories = @repositories.select { |repo| repo.full_name.downcase.include?(params[:q].downcase) }
     else
-      page = params[:page] || 1
-      @repositories = client.repos(current_account.github_username, page:)
+      @repositories = client.list_app_installation_repositories[:repositories]
     end
 
     respond_to do |format|

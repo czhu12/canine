@@ -3,11 +3,11 @@
       class="border-b border-b-gray-500 flex justify-between items-center px-4 py-2"
       data-github-select-repository-target="repositories"
     >
-      <span><%= repo.full_name %></span>
+      <span><%= repo[:full_name] %></span>
       <button
         type="button"
         class="btn btn-outline btn-sm"
         data-action="github-select-repository#selectRepository"
-        data-repository-name="<%= repo.full_name %>">Connect</button>
+        data-repository-name="<%= repo[:full_name] %>">Connect</button>
     </li>
   <% end %>

@@ -16,7 +16,12 @@ Rails.application.routes.draw do
     end
   end
   namespace :inbound_webhooks do
-    resources :github, controller: :github, only: [ :create ]
+    resources :github, only: [ :create ]
+    resources :github_app, only: [ :create ] do
+      collection do
+        get :callback
+      end
+    end
   end
   get "/privacy", to: "static#privacy"
   get "/terms", to: "static#terms"
