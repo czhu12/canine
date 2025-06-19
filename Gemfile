@@ -39,7 +39,7 @@ group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
   gem "simplecov", require: false
   gem "pry", "~> 0.14.2"
-  gem "rspec-rails", "~> 7.1"
+  gem "rspec-rails", "~> 8.0"
   gem "factory_bot_rails"
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
