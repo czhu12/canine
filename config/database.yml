@@ -67,7 +67,11 @@ development:
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
+  <% if ENV["DOCKER_ENV"] %>
+  <<: *docker
+  <% else %>
   <<: *default
+  <% end %>
   database: canine_test
 
 # As with config/credentials.yml, you never want to store sensitive information,
