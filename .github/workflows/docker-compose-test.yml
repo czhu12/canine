@@ -1,0 +1,119 @@
+name: Docker Compose Browser Tests
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  docker-compose-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Compose services
+        run: |
+          # Build the services defined in docker-compose.yml
+          docker compose build
+        env:
+          PORT: 3456
+          CANINE_USERNAME: test_user
+          CANINE_PASSWORD: test_password
+
+      - name: Start Docker Compose services
+        run: |
+          # Start services in detached mode
+          docker compose up -d
+        env:
+          PORT: 3456
+          CANINE_USERNAME: test_user
+          CANINE_PASSWORD: test_password
+
+      - name: Wait for application to be ready
+        run: |
+          echo "Waiting for application to be ready on localhost:3456..."
+          max_attempts=60
+          attempt=0
+          
+          while [ $attempt -lt $max_attempts ]; do
+            if curl -f -s -o /dev/null -w "%{http_code}" http://localhost:3456 | grep -q "200\|302"; then
+              echo "Application is ready!"
+              break
+            fi
+            
+            echo "Attempt $((attempt + 1))/$max_attempts: Application not ready yet..."
+            sleep 5
+            attempt=$((attempt + 1))
+          done
+          
+          if [ $attempt -eq $max_attempts ]; then
+            echo "Application failed to start within timeout"
+            docker compose logs
+            exit 1
+          fi
+
+      - name: Check application health
+        run: |
+          # Verify the application returns a successful status
+          response_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3456)
+          echo "Response code: $response_code"
+          
+          if [ "$response_code" != "200" ] && [ "$response_code" != "302" ]; then
+            echo "Application is not healthy. Expected 200 or 302, got $response_code"
+            docker compose logs
+            exit 1
+          fi
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Install Chrome for browser tests
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y google-chrome-stable
+
+      - name: Run browser tests
+        run: |
+          # Run the browser tests against the running Docker Compose services
+          # Using the test database URL pointing to the Docker Compose PostgreSQL
+          RAILS_ENV=test \
+          DATABASE_URL=postgres://postgres:password@localhost:5432/canine_test \
+          REDIS_URL=redis://localhost:6379/0 \
+          APP_HOST=http://localhost:3456 \
+          bundle exec rspec spec/system/ --format documentation
+        env:
+          HEADLESS: true
+
+      - name: Upload screenshots on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-test-screenshots
+          path: tmp/screenshots
+          if-no-files-found: ignore
+
+      - name: Upload Docker Compose logs on failure
+        if: failure()
+        run: |
+          docker compose logs > docker-compose-logs.txt
+          
+      - name: Upload logs artifact
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: docker-compose-logs
+          path: docker-compose-logs.txt
+          if-no-files-found: ignore
+
+      - name: Clean up
+        if: always()
+        run: |
+          docker compose down -v
