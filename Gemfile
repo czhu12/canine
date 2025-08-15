@@ -103,7 +103,7 @@ gem "cron2english", "~> 0.1.7"
 
 gem "avo", "~> 3.23"
 
-gem "sentry-ruby", "~> 5.23"
+gem "sentry-ruby", "~> 5.26"
 gem "sentry-rails", "~> 5.23"
 
 gem "sys-proctable", "~> 1.3"
