@@ -1,21 +1,22 @@
 class K8::Helm::Service
-  attr_reader :add_on, :client
+  attr_reader :add_on, :client, :user
 
-  def self.create_from_add_on(add_on)
+  def self.create_from_add_on(add_on, user)
     if add_on.chart_type == "redis"
-      K8::Helm::Redis.new(add_on)
+      K8::Helm::Redis.new(add_on, user)
     elsif add_on.chart_type == "postgresql"
-      K8::Helm::Postgresql.new(add_on)
+      K8::Helm::Postgresql.new(add_on, user)
     elsif add_on.chart_type == "clickhouse"
-      K8::Helm::Clickhouse.new(add_on)
+      K8::Helm::Clickhouse.new(add_on, user)
     else
-      K8::Helm::Service.new(add_on)
+      K8::Helm::Service.new(add_on, user)
     end
   end
 
-  def initialize(add_on)
+  def initialize(add_on, user)
     @add_on = add_on
-    @client = K8::Client.new(add_on.cluster.kubeconfig)
+    @user = user
+    @client = K8::Client.new(K8::Connection.new(add_on.cluster, user))
   end
 
   def friendly_name
@@ -23,7 +24,7 @@ class K8::Helm::Service
   end
 
   def restart
-    kubectl = K8::Kubectl.from_add_on(add_on)
+    kubectl = K8::Kubectl.new(K8::Connection.new(add_on.cluster, user))
     kubectl.call("rollout restart deployment -n #{add_on.name}")
   end
 
@@ -82,7 +83,7 @@ class K8::Helm::Service
   end
 
   def get_volume_usage(pod_name, mount_path)
-    output = K8::Kubectl.new(add_on.cluster.kubeconfig, Cli::RunAndReturnOutput.new).call("exec #{pod_name} -n #{add_on.name} -- df -h #{mount_path}")
+    output = K8::Kubectl.new(add_on.cluster, Cli::RunAndReturnOutput.new).call("exec #{pod_name} -n #{add_on.name} -- df -h #{mount_path}")
     lines = output.strip.split("\n")
     return nil if lines.size < 2
 
@@ -95,12 +96,12 @@ class K8::Helm::Service
   end
 
   def get_persistent_volume
-    pv = K8::Kubectl.new(add_on.cluster.kubeconfig, Cli::RunAndReturnOutput.new).call("get pv #{service_name} -o json")
+    pv = K8::Kubectl.new(add_on.cluster, Cli::RunAndReturnOutput.new).call("get pv #{service_name} -o json")
     JSON.parse(pv)
   end
 
   def exec_df_command
-    output = K8::Kubectl.new(add_on.cluster.kubeconfig, Cli::RunAndReturnOutput.new).call("exec #{service_name} -- df -h /data")
+    output = K8::Kubectl.new(add_on.cluster, Cli::RunAndReturnOutput.new).call("exec #{service_name} -- df -h /data")
     output.strip
   end
 end
