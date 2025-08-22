@@ -46,7 +46,7 @@ class AddOnsController < ApplicationController
 
     respond_to do |format|
       if result.success?
-        AddOns::InstallJob.perform_later(@add_on)
+        AddOns::InstallJob.perform_later(@add_on, current_user)
         format.html { redirect_to @add_on, notice: "Add on was successfully created." }
         format.json { render :show, status: :created, location: @add_on }
       else
@@ -63,7 +63,7 @@ class AddOnsController < ApplicationController
 
     respond_to do |format|
       if result.success?
-        AddOns::InstallJob.perform_later(@add_on)
+        AddOns::InstallJob.perform_later(@add_on, current_user)
         format.html { redirect_to @add_on, notice: "Add on #{@add_on.name} is updating..." }
         format.json { render :show, status: :ok, location: @add_on }
       else
@@ -105,7 +105,7 @@ class AddOnsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_add_on
     @add_on = current_account.add_ons.find(params[:id])
-    @service = K8::Helm::Service.create_from_add_on(@add_on)
+    @service = K8::Helm::Service.create_from_add_on(@add_on, current_user)
   rescue ActiveRecord::RecordNotFound
     redirect_to add_ons_path
   end

@@ -5,12 +5,11 @@ class Projects::DeploymentJob < ApplicationJob
   DEPLOYABLE_RESOURCES = %w[ConfigMap Deployment CronJob Service Ingress Pv Pvc]
   class DeploymentFailure < StandardError; end
 
-  def perform(deployment)
+  def perform(deployment, user)
     @logger = deployment
     @marked_resources = []
     project = deployment.project
-    kubeconfig = project.cluster.kubeconfig
-    kubectl = create_kubectl(deployment, kubeconfig)
+    kubectl = create_kubectl(deployment, K8::Connection.new(project.cluster, user))
 
     # Create namespace
     apply_namespace(project, kubectl)
@@ -76,9 +75,9 @@ class Projects::DeploymentJob < ApplicationJob
     _run_command(project.postdeploy_command, kubectl, project, 'postdeploy')
   end
 
-  def create_kubectl(deployment, kubeconfig)
+  def create_kubectl(deployment, connection)
     runner = Cli::RunAndLog.new(deployment)
-    K8::Kubectl.new(kubeconfig, runner)
+    K8::Kubectl.new(connection, runner)
   end
 
   def deploy_services(project, kubectl)

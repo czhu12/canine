@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_08_18_215548) do
+ActiveRecord::Schema[7.2].define(version: 2025_08_19_200812) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -82,30 +82,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_18_215548) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "build_clouds", force: :cascade do |t|
-    t.bigint "cluster_id", null: false
-    t.string "namespace", default: "canine-k8s-builder", null: false
-    t.integer "status", default: 0, null: false
-    t.string "driver_version"
-    t.string "webhook_url"
-    t.jsonb "installation_metadata", default: {}
-    t.datetime "installed_at"
-    t.text "error_message"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["cluster_id"], name: "index_build_clouds_on_cluster_id"
-  end
-
-  create_table "build_configurations", force: :cascade do |t|
-    t.bigint "project_id", null: false
-    t.integer "driver", null: false
-    t.bigint "build_cloud_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["build_cloud_id"], name: "index_build_configurations_on_build_cloud_id"
-    t.index ["project_id"], name: "index_build_configurations_on_project_id"
-  end
-
   create_table "builds", force: :cascade do |t|
     t.bigint "project_id", null: false
     t.string "repository_url"
@@ -120,12 +96,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_18_215548) do
 
   create_table "clusters", force: :cascade do |t|
     t.string "name", null: false
-    t.jsonb "kubeconfig", default: {}, null: false
+    t.jsonb "kubeconfig", default: {}
     t.bigint "account_id", null: false
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "cluster_type", default: 0
+    t.string "external_id"
     t.index ["account_id", "name"], name: "index_clusters_on_account_id_and_name", unique: true
   end
 
@@ -386,13 +363,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_18_215548) do
     t.string "docker_command"
     t.text "predeploy_command"
     t.integer "status", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "container_registry_url"
     t.jsonb "canine_config", default: {}
     t.text "postdeploy_command"
     t.text "predestroy_command"
     t.text "postdestroy_command"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "container_registry_url"
     t.bigint "project_fork_cluster_id"
     t.integer "project_fork_status", default: 0
     t.index ["cluster_id"], name: "index_projects_on_cluster_id"
@@ -443,6 +420,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_18_215548) do
     t.boolean "admin", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "username"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -467,9 +445,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_18_215548) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "add_ons", "clusters"
-  add_foreign_key "build_clouds", "clusters"
-  add_foreign_key "build_configurations", "build_clouds"
-  add_foreign_key "build_configurations", "projects"
   add_foreign_key "builds", "projects"
   add_foreign_key "clusters", "accounts"
   add_foreign_key "cron_schedules", "services"

@@ -12,6 +12,7 @@
 #  remember_created_at        :datetime
 #  reset_password_sent_at     :datetime
 #  reset_password_token       :string
+#  username                   :string
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #
@@ -45,7 +46,12 @@ class User < ApplicationRecord
   # has_many :notification_mentions, as: :record, dependent: :destroy, class_name: "Noticed::Event"
 
   def github_provider
-  providers.find_by(provider: "github")
+    providers.find_by(provider: "github")
+  end
+
+  def portainer_jwt
+    return @portainer_jwt if @portainer_jwt
+    @portainer_jwt = providers.find_by(provider: "portainer")&.access_token
   end
 
   private
