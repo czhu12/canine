@@ -1,12 +1,12 @@
 class AddOns::InstallHelmChart
   extend LightService::Action
-  expects :add_on
+  expects :add_on, :user
 
   executed do |context|
     add_on = context.add_on
 
     add_on.update_install_stage!(0)
-    create_namespace(add_on)
+    create_namespace(add_on, context.user)
 
     if add_on.installed?
       add_on.updating!
@@ -17,7 +17,8 @@ class AddOns::InstallHelmChart
     charts = K8::Helm::Client::CHARTS['helm']['charts']
     chart = charts.find { |chart| chart['name'] == add_on.chart_type }
 
-    client = K8::Helm::Client.connect(add_on.cluster.kubeconfig, Cli::RunAndLog.new(add_on))
+    kubeconfig = K8::Connection.new(add_on.cluster, context.user).kubeconfig
+    client = K8::Helm::Client.connect(kubeconfig, Cli::RunAndLog.new(add_on))
 
     chart_url = add_on.chart_url
 
@@ -46,8 +47,9 @@ class AddOns::InstallHelmChart
     raise e
   end
 
-  def self.create_namespace(add_on)
-    kubectl = K8::Kubectl.new(add_on.cluster.kubeconfig, Cli::RunAndLog.new(add_on))
+  def self.create_namespace(add_on, user)
+    runner = Cli::RunAndLog.new(add_on)
+    kubectl = K8::Kubectl.new(K8::Connection.new(add_on.cluster, user), runner)
     namespace_yaml = K8::Namespace.new(add_on).to_yaml
     kubectl.apply_yaml(namespace_yaml)
   end

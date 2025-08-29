@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class K8::Base
+  attr_reader :user
+
+  def initialize(user)
+    @user = user
+  end
+
   def template_path
     class_path_parts = self.class.name.split('::').map(&:underscore)
 
@@ -18,7 +24,7 @@ class K8::Base
   end
 
   def client
-    @client ||= K8::Client.new(cluster.kubeconfig)
+    @client ||= K8::Client.new(K8::Connection.new(cluster, user))
   end
 
   def setup

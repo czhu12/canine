@@ -2,9 +2,8 @@ class Clusters::Install
   DEFAULT_NAMESPACE = "canine-system".freeze
   extend LightService::Organizer
 
-  def self.call(cluster)
-    cluster.installing!
-    result = with(cluster:).reduce(
+  def self.call(cluster, user)
+    result = with(cluster:, user:).reduce(
       Clusters::IsReady,
       Clusters::CreateNamespace,
       Clusters::InstallNginxIngress,
