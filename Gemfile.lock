@@ -480,10 +480,10 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     rexml (3.4.1)
-    rqrcode (2.2.0)
+    rqrcode (3.1.0)
       chunky_png (~> 1.0)
-      rqrcode_core (~> 1.0)
-    rqrcode_core (1.2.0)
+      rqrcode_core (~> 2.0)
+    rqrcode_core (2.0.0)
     rspec-core (3.13.5)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.5)
@@ -695,7 +695,7 @@ DEPENDENCIES
   rails (~> 7.2.2)
   redcarpet (~> 3.6)
   responders!
-  rqrcode (~> 2.2)
+  rqrcode (~> 3.1)
   rspec-rails (~> 8.0)
   rubocop-rails-omakase
   rubyzip (~> 2.4)
