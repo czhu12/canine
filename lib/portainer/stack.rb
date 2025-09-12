@@ -4,6 +4,7 @@ class Portainer::Stack
     @stack_manager = stack_manager
     @client = client
   end
+  delegate :authenticated?, to: :client
 
   def self.build(stack_manager, user)
     access_token = if stack_manager.access_token.present?
@@ -15,8 +16,25 @@ class Portainer::Stack
     new(stack_manager, client)
   end
 
+  def requires_reauthentication?
+    stack_manager.access_token.blank?
+  end
+
   def provides_clusters?
     true
+  end
+
+  def provides_logs?
+    true
+  end
+
+  def logs_url(service, pod_name)
+    service = service.name
+    container = service.project.name
+    namespace = service.project.name
+    cluster = service.project.cluster
+
+    "/#{cluster.external_id}/kubernetes/applications/#{namespace}/#{service}/#{pod_name}/#{container}/logs"
   end
 
   def sync_registries(user)
