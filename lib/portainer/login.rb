@@ -3,23 +3,31 @@ class Portainer::Login
 
   expects :password, :account
   expects :username, default: nil
-  promises :user, :account
+  expects :provider_url, default: nil
+  promises :user, :account, :stack_manager
 
   executed do |context|
-    provider_url = context.account.stack_manager.provider_url
+    provider_url = context.provider_url
+
+    if context.account.stack_manager.nil?
+      context.stack_manager = context.account.stack_managers.create!(
+        stack_manager_type: :portainer,
+        provider_url:
+      )
+    end
+
     jwt = Portainer::Client.authenticate(
       username: context.username,
       auth_code: context.password,
-      provider_url: provider_url
+      provider_url:
     )
 
     if jwt.nil?
-      context.user.errors.add(:base, "Invalid username or password")
-      context.fail_and_return!
+      context.fail_and_return!("Invalid username or password")
     end
 
     if context.username.blank?
-      response = Portainer::Client.new(provider_url, context.password).get("/api/users/me")
+      response = Portainer::Client.new(provider_url, jwt).get("/api/users/me")
       context.username = response.dig("Username")
     end
 

@@ -1,7 +1,10 @@
 <div>
-  <%= form_with url: local_onboarding_index_path, method: :post do |form| %>
+  <%= form_with url: session_save_stack_manager_local_onboarding_index_path, method: :post, class: "mb-4", data: { onboarding_target: "stackManagerForm", action: "submit->onboarding#submit" } do |form| %>
     <%= render "accounts/stack_managers/url", form: form %>
-
+    <%= form.submit "Save", class: "btn btn-primary" %>
+  <% end %> 
+  <%= form_with url: local_onboarding_index_path, method: :post, class: "hidden", data: { onboarding_target: "portainerForm" } do |form| %>
+    <h3 class="text-lg font-bold mb-2">Account Information</h3>
     <div class="form-group">
       <%= form.label :account_name, "Account Name" %>
       <%= form.text_field(

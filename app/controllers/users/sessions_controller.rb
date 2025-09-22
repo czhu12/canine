@@ -81,6 +81,7 @@ class Users::SessionsController < Devise::SessionsController
 
   def load_account_from_slug
     @account = Account.friendly.find(params[:slug])
+    session[:account_id] = @account.id
   rescue ActiveRecord::RecordNotFound
     flash[:alert] = "Account not found"
     redirect_to new_user_session_path

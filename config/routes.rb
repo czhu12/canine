@@ -152,6 +152,7 @@ Rails.application.routes.draw do
       resources :onboarding, only: [ :index, :create ] do
         collection do
           post :verify_url
+          post :session_save_stack_manager
         end
       end
 
