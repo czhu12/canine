@@ -154,6 +154,12 @@ Rails.application.routes.draw do
           post :verify_url
         end
       end
+
+      resources :portainer, only: [] do
+        collection do
+          get :github_oauth
+        end
+      end
     end
     if Rails.application.config.onboarding_methods.any?
       root to: "local/onboarding#index"
