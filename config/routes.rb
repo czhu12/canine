@@ -149,7 +149,17 @@ Rails.application.routes.draw do
           post :login
         end
       end
-      resources :onboarding, only: [ :index, :create ]
+      resources :onboarding, only: [ :index, :create ] do
+        collection do
+          post :session_save_stack_manager
+        end
+      end
+
+      resources :portainer, only: [] do
+        collection do
+          get :github_oauth
+        end
+      end
     end
     if Rails.application.config.onboarding_methods.any?
       root to: "local/onboarding#index"

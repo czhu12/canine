@@ -5,6 +5,10 @@ class Local::OnboardingController < ApplicationController
   def index
   end
 
+  def session_save_stack_manager
+    session[:provider_url] = params[:stack_manager][:provider_url]
+  end
+
   def create
     result = Portainer::Onboarding::Create.call(params)
 

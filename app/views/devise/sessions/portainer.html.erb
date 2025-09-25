@@ -56,8 +56,16 @@
           ) %>
         </div>
 
+
         <div class="form-control mt-6">
           <%= f.submit "Sign in to #{@account.name}", class: "btn btn-primary w-full" %>
+        </div>
+
+        <div class="text-center">or</div>
+        <div>
+          <%= link_to Git::Github::Auth.authorize_url(github_oauth_local_portainer_index_url), class: "btn btn-primary btn-outline w-full" do %>
+            <iconify-icon icon="mdi:github"></iconify-icon> Sign in via Github
+          <% end %>
         </div>
       <% end %>
 

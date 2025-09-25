@@ -1,18 +1,24 @@
 class Portainer::Login
   extend LightService::Action
 
-  expects :username, :password, :account
-  promises :user, :account
+  expects :password, :account
+  expects :username, default: nil
+  promises :user, :account, :stack_manager
 
   executed do |context|
     provider_url = context.account.stack_manager.provider_url
+
     context.user = User.find_or_initialize_by(
       email: context.username + "@oncanine.run",
     )
     portainer_user = Portainer::Client.authenticate(
       username: context.username,
       auth_code: context.password,
-      provider_url: provider_url
+      provider_url:
+    )
+
+    context.user = User.find_or_initialize_by(
+      email: portainer_user.username + "@oncanine.run",
     )
 
     password = Devise.friendly_token

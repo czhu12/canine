@@ -50,7 +50,7 @@ RSpec.describe Portainer::Login do
         described_class.execute(context)
 
         expect(context).to be_failure
-        expect(context.user.errors[:base]).to include('Invalid username or password')
+        expect(context.message).to include('Invalid username or password')
       end
 
       it 'does not create a user' do
