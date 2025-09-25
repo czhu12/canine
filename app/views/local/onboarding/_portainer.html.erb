@@ -9,6 +9,7 @@
       <%= form.label :account_name, "Account Name" %>
       <%= form.text_field(
         :account_name,
+        placeholder: "My Organization",
         name: "account[name]",
         class: "input input-bordered w-full",
         required: true,
@@ -18,6 +19,7 @@
       <%= form.label :username, "Portainer Username" %>
       <%= form.text_field(
         :username,
+        placeholder: "Enter your username",
         name: "user[username]",
         class: "input input-bordered w-full",
         required: true,
@@ -28,6 +30,7 @@
       <div class="flex items-center">
         <%= form.text_field(
           :password,
+          placeholder: "Enter your password",
           name: "user[password]",
           type: "password",
           class: "input input-bordered w-full",

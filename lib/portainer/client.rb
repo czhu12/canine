@@ -13,10 +13,18 @@ module Portainer
     class UnauthorizedError < StandardError; end
     class ConnectionError < StandardError; end
     class PermissionDeniedError < StandardError; end
+    class AuthenticationError < StandardError; end
 
     def initialize(provider_url, jwt)
       @jwt = jwt
       @provider_url = provider_url
+    end
+
+    def self.reachable?(provider_url)
+      HTTParty.get("#{provider_url}/system/status")
+      true
+    rescue Socket::ResolutionError, Net::ReadTimeout, StandardError
+      false
     end
 
     def authenticated?
@@ -54,7 +62,21 @@ module Portainer
         )
       end
 
-      response.parsed_response['jwt'] if response.success?
+      if response.success?
+        jwt = response.parsed_response['jwt']
+        username_response = get(
+          "#{provider_url}/api/users/me",
+          headers: { 'Authorization' => "Bearer #{jwt}" },
+        )
+
+        Portainer::Data::User.new(
+          id: username_response.parsed_response['Id'],
+          username: username_response.parsed_response['Username'],
+          jwt:
+        )
+      else
+        raise AuthenticationError, "Invalid username or password"
+      end
     rescue Socket::ResolutionError
       raise ConnectionError, "Portainer URL is not resolvable"
     rescue Net::ReadTimeout
