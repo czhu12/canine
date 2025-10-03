@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/heartcombo/responders.git
-  revision: 9bdc60dfbfa8001641c1c4df7bc73c3fc2a4cf41
+  revision: 9cd1924cafc62058ba546eb1ca5eefcb69287773
   branch: main
   specs:
     responders (3.1.1)
